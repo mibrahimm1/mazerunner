@@ -3,17 +3,20 @@ package com.ibrahim;
 import javax.swing.*;
 import java.awt.*;
 
-public class GamePanel extends JPanel implements Runnable{
-    // SCREEN SETTINGS:
-    final int originalTileSize = 16 ;   // 16 x 16 px (player, graphics etc)
-    final int scale = 3 ; // Scaling for bigger screens
+import com.ibrahim.entity.Player;
 
-    final int tileSize = originalTileSize * scale ;
+public class GamePanel extends JPanel implements Runnable
+{
+    // SCREEN SETTINGS:
+    public final int originalTileSize = 16 ;   // sub tile size
+    final int scale = 3 ; // Scaling
+
+    public final int tileSize = originalTileSize * scale ;  // 32 px
 
     final int maxScreenCol = 16 ;
     final int maxScreenRow = 12 ;
-    final int screenWidth = tileSize * maxScreenCol ; // 768 px
-    final int screenHeight = tileSize * maxScreenRow ; // 576 px
+    final int screenWidth = tileSize * maxScreenCol ; // 512 px
+    final int screenHeight = tileSize * maxScreenRow ; // 384 px
 
     // KEY HANDLER:
     KeyHandler keyH = new KeyHandler();
@@ -21,12 +24,9 @@ public class GamePanel extends JPanel implements Runnable{
     // GAME CLOCK:
     Thread gameThread ;
 
-    // PLAYER POSITION:
+    // PLAYER:
+    Player player ;
 
-    int playerX = 100 ;
-    int playerY = 100;
-
-    int playerSpeed = 4 ;
 
     // FRAMES PER SECOND:
     final int FPS = 60 ;
@@ -37,9 +37,10 @@ public class GamePanel extends JPanel implements Runnable{
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
-        this.setDoubleBuffered(true);   // Better rendering performance
+
         this.addKeyListener(keyH);
         this.setFocusable(true);
+        player = new Player(this, keyH);
 
     }
 
@@ -52,49 +53,33 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run() {
         // MAIN GAME ENGINE:
-        //      - UPDATING INFORMATION AND CHARACTER POSITION
-        //      - DRAWING THE SCREEN WITH UPDATED INFORMATION
+        // - UPDATING INFORMATION AND CHARACTER POSITION
+        // - DRAWING THE SCREEN WITH UPDATED INFORMATION
 
-        double drawInterval = 1000000000/FPS ;
-        double nextDrawTime = System.nanoTime() + drawInterval ;
+        double drawInterval = 1000000000.0 / FPS;
+        double nextDrawTime = System.nanoTime() + drawInterval;
 
         while (gameThread != null) {
             update();
-
-            repaint(); // Used to Call paintComponent()
-
-
+            repaint(); // Calls paintComponent()
 
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime = remainingTime / 1000000000 ;
                 if (remainingTime < 0) {
-                    remainingTime = 0 ;
+                    remainingTime = 0;
                 }
-                Thread.sleep((long) remainingTime);
-                nextDrawTime += drawInterval ;
+                Thread.sleep((long) (remainingTime / 1000000)); // Convert nanoseconds to milliseconds
+                nextDrawTime += drawInterval;
 
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
-
         }
 
     }
 
     public void update() {
-        if (keyH.upPressed) {
-            playerY -= playerSpeed ;
-        }
-        if (keyH.downPressed) {
-            playerY += playerSpeed ;
-        }
-        if (keyH.leftPressed) {
-            playerX -= playerSpeed ;
-        }
-        if (keyH.rightPressed) {
-            playerX += playerSpeed ;
-        }
+        player.update();
     }
 
     // BUILT IN METHOD OF JPanel TO PAINT GRAPHICS
@@ -102,9 +87,8 @@ public class GamePanel extends JPanel implements Runnable{
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g ; // Converting Graphics to Graphics2D
+        player.draw(g2);
 
-        g2.setColor(Color.white);
-        g2.fillRect(playerX,playerY,tileSize, tileSize);
         g2.dispose();   // Saving Memory
     }
 }
