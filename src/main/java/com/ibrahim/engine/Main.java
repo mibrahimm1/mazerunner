@@ -1,4 +1,4 @@
-package com.ibrahim;
+package com.ibrahim.engine;
 
 import javax.swing.*;
 

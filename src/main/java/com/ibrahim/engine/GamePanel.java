@@ -1,31 +1,43 @@
-package com.ibrahim;
+package com.ibrahim.engine;
 
 import javax.swing.*;
 import java.awt.*;
 
 import com.ibrahim.entity.Player;
+import com.ibrahim.tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable
 {
     // SCREEN SETTINGS:
     public final int originalTileSize = 16 ;   // sub tile size
     final int scale = 3 ; // Scaling
-
     public final int tileSize = originalTileSize * scale ;  // 32 px
+    public final int maxScreenCol = 16 ;
+    public final int maxScreenRow = 12 ;
+    public final int screenWidth = tileSize * maxScreenCol ; // 512 px
+    public final int screenHeight = tileSize * maxScreenRow ; // 384 px
 
-    final int maxScreenCol = 16 ;
-    final int maxScreenRow = 12 ;
-    final int screenWidth = tileSize * maxScreenCol ; // 512 px
-    final int screenHeight = tileSize * maxScreenRow ; // 384 px
+    // WORLD SETTINGS:
+    public final int maxWorldCol = 50 ;
+    public final int maxWorldRow = 50 ;
+    public final int worldWidth = tileSize * maxWorldCol ;
+    public final int worldHeight = tileSize * maxWorldRow ;
+
 
     // KEY HANDLER:
     KeyHandler keyH = new KeyHandler();
+
+    // TILE MANAGER:
+    public TileManager tileM = new TileManager(this);
+
+    // COLLISION DETECTOR:
+    public CollisionDetector collisionDetector = new CollisionDetector(this);
 
     // GAME CLOCK:
     Thread gameThread ;
 
     // PLAYER:
-    Player player ;
+    public Player player ;
 
 
     // FRAMES PER SECOND:
@@ -87,6 +99,7 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g ; // Converting Graphics to Graphics2D
+        tileM.draw(g2);
         player.draw(g2);
 
         g2.dispose();   // Saving Memory
