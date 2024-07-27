@@ -4,12 +4,16 @@ import com.ibrahim.engine.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.util.Objects;
 
 public class Chest extends ObjectParent {
     public Chest() {
         name = "Chest" ;
+        collisionArea = new Rectangle(8,8,32,32) ;
+        collisionAreaDefaultX = collisionArea.x ;
+        collisionAreaDefaultY = collisionArea.y ;
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/objects/chest (OLD).png"));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/objects/chest (OLD).png")));
         } catch (Exception e) {
             e.printStackTrace();
         }

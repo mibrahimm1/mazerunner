@@ -4,12 +4,16 @@ import com.ibrahim.engine.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.util.Objects;
 
 public class Key extends ObjectParent {
     public Key() {
         name = "Key" ;
+        collisionArea = new Rectangle(8,8,32,32) ;
+        collisionAreaDefaultX = collisionArea.x ;
+        collisionAreaDefaultY = collisionArea.y ;
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/objects/key.png"));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/objects/key.png")));
         } catch (Exception e) {
             e.printStackTrace();
         }

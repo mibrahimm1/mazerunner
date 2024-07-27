@@ -10,6 +10,9 @@ public abstract class ObjectParent {
     public String name ;
     public boolean collision = false ;
     public int worldX, worldY ;
+    public Rectangle collisionArea ;
+    public int collisionAreaDefaultX = 0;
+    public int collisionAreaDefaultY = 0;
 
     public abstract void draw(Graphics2D g2, GamePanel gp) ;
 }

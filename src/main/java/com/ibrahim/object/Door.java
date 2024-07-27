@@ -11,6 +11,9 @@ public class Door extends ObjectParent {
 
     public Door() {
         name = "Door" ;
+        collisionArea = new Rectangle(0,0,48,48) ;
+        collisionAreaDefaultX = collisionArea.x ;
+        collisionAreaDefaultY = collisionArea.y ;
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/objects/door_iron.png"));
         } catch (Exception e) {

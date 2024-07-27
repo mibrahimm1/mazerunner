@@ -2,12 +2,15 @@ package com.ibrahim.entity;
 
 import com.ibrahim.engine.GamePanel;
 import com.ibrahim.engine.KeyHandler;
+import com.ibrahim.object.ObjectParent;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Vector;
 
 public class Player extends Entity {
     GamePanel gp;
@@ -20,6 +23,8 @@ public class Player extends Entity {
     int spriteIndex = 0 ; // To cycle through sprites for animation
     int playerWidth ;
     int playerHeight ;
+
+    ArrayList<ObjectParent> inventory ;
 
 
 
@@ -35,8 +40,11 @@ public class Player extends Entity {
         direction = 2 ;
         screenX = gp.screenWidth / 2 - (gp.tileSize/2);
         screenY = gp.screenHeight / 2 - (gp.tileSize/2);
+        inventory = new ArrayList<>();
 
         collisionArea = new Rectangle(20, 33, 18, 22);
+        collisionAreaDefaultX = collisionArea.x ;
+        collisionAreaDefaultY = collisionArea.y ;
         loadSpriteSheet();
         loadPlayerSprites();
         setDefaultValue();
@@ -102,7 +110,17 @@ public class Player extends Entity {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             moved = true;
             collisionOn = false; // Reset collision flag before checking collision
-            gp.collisionDetector.checkTile(this); // Check for collisions
+
+            // Check Tile Collision
+            gp.collisionDetector.checkTile(this);
+
+            // Checking Object Collission ;
+            int objIndex = gp.collisionDetector.checkObject(this, true) ;
+
+            if (collisionOn) {
+                System.out.println("Door Collided");
+            }
+            objectAction(objIndex);
 
             if (!collisionOn) {
                 // Move the player if no collision detected
@@ -135,6 +153,42 @@ public class Player extends Entity {
             }
         } else {
             spriteIndex = 0; // Reset to the first sprite if not moving
+        }
+    }
+
+    public void objectAction(int index) {
+        if (index != 999) {
+            switch (gp.obj[index].name) {
+                case "Key":
+                    inventory.add(gp.obj[index]) ;
+                    System.out.println("Key Obtained");
+                    gp.obj[index] = null ;
+                    break ;
+                case "Door":
+                    boolean hasKey = false ;
+                    int keyIndex = 0;
+                    int keyCount = 0 ;
+                    int i = 0 ;
+                    while (i < inventory.size()) {
+                        ObjectParent obj = inventory.get(i) ;
+                        if (obj.getClass().getSimpleName().equals("Key")) {
+                            hasKey = true ;
+                            keyIndex = i ;
+                            keyCount++ ;
+                        }
+                        i++ ;
+                    }
+                    if (hasKey) {
+                        inventory.remove(keyIndex) ;
+                        System.out.println("Used Key!, Keys Left: " + --keyCount);
+                        gp.obj[index] = null ;
+                        collisionOn = false;
+                    } else {
+                        System.out.println("Denied Entry! You Don't Have Any Keys Left");
+                        collisionOn = true ;
+                    }
+                    break ;
+            }
         }
     }
 
