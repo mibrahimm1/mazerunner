@@ -19,6 +19,9 @@ public class Main {
         window.setLocationRelativeTo(null) ; // Centering the Window
         window.setVisible(true);
 
+        // Loading Assets
+        gamePanel.loadObjects();
+
         // Starting the Game
         gamePanel.startGameThread();
     }

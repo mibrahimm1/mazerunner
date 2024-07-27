@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import com.ibrahim.entity.Player;
+import com.ibrahim.object.ObjectParent;
 import com.ibrahim.tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable
@@ -36,13 +37,19 @@ public class GamePanel extends JPanel implements Runnable
     // GAME CLOCK:
     Thread gameThread ;
 
-    // PLAYER:
-    public Player player ;
-
-
     // FRAMES PER SECOND:
     final int FPS = 60 ;
 
+    //------------------------------ASSETS------------------------------------------------
+
+    // ASSET LOADER
+    public AssetLoader assetLoader = new AssetLoader(this);
+
+    // PLAYER:
+    public Player player ;
+
+    // OBJECTS:
+    public ObjectParent obj[] = new ObjectParent[10] ;
 
 
     // CONSTRUCTOR:
@@ -54,6 +61,10 @@ public class GamePanel extends JPanel implements Runnable
         this.setFocusable(true);
         player = new Player(this, keyH);
 
+    }
+
+    public void loadObjects() {
+        assetLoader.setObject();
     }
 
     public void startGameThread() {
@@ -99,8 +110,20 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g ; // Converting Graphics to Graphics2D
+        // TILES
         tileM.draw(g2);
+
+        // OBJECTS
+        for (int i = 0 ; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2, this);
+            }
+        }
+
+        // PLAYER
         player.draw(g2);
+
+
 
         g2.dispose();   // Saving Memory
     }

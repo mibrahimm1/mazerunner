@@ -45,7 +45,7 @@ public class Player extends Entity {
     public void setDefaultValue() {
         worldX = gp.tileSize * 23 ;
         worldY = gp.tileSize * 21 ;
-        speed = 3 ;
+        speed = 4 ;
         lastSpriteChangeTime = System.currentTimeMillis();
     }
 
