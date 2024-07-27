@@ -18,5 +18,8 @@ public class Main {
         // Displaying Game Frame
         window.setLocationRelativeTo(null) ; // Centering the Window
         window.setVisible(true);
+
+        // Starting the Game
+        gamePanel.startGameThread();
     }
 }
