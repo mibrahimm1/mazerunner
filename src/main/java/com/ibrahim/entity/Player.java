@@ -53,8 +53,8 @@ public class Player extends Entity {
     }
 
     public void setDefaultValue() {
-        worldX = gp.tileSize * 23 ;
-        worldY = gp.tileSize * 21 ;
+        worldX = gp.tileSize * 61 ;
+        worldY = gp.tileSize * 62 ;
         speed = 4 ;
         lastSpriteChangeTime = System.currentTimeMillis();
     }
@@ -209,6 +209,12 @@ public class Player extends Entity {
                     gp.stopMusic();
                     gp.playSFX(2);
                     break ;
+                case "Pit":
+                    gp.UserInterface.showMessage("You thought it was that easy! Try Again");
+                    worldX = gp.tileSize * 61 ;
+                    worldY = gp.tileSize * 62 ;
+                    break ;
+
             }
         }
     }
