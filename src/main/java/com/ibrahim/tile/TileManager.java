@@ -1,10 +1,14 @@
 package com.ibrahim.tile;
 
 import com.ibrahim.engine.GamePanel;
+import com.ibrahim.engine.UtilityTool;
+import jdk.jshell.execution.Util;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Objects;
@@ -17,41 +21,85 @@ public class TileManager {
 
     public TileManager(GamePanel gp) {
         this.gp = gp ;
-        tile = new Tile[10] ; // Types of Tiles (Textures)
+        tile = new Tile[50] ; // Types of Tiles (Textures)
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
         getTileImage();
-        loadMap("/maps/world01.txt");
+        loadMap("/maps/world02.txt");
     }
 
     public void getTileImage() {
         try {
-            tile[0] = new Tile() ;
-            tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/grass.png")));
-
-            tile[1] = new Tile() ;
-            tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/wall.png")));
-            tile[1].collision = true ;
-
-            tile[2] = new Tile() ;
-            tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/water.png")));
-            tile[2].collision = true ;
-
-            tile[3] = new Tile() ;
-            tile[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/earth.png")));
-
-            tile[4] = new Tile() ;
-            tile[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tree.png")));
-            tile[4].collision = true ;
-
-            tile[5] = new Tile() ;
-            tile[5].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/sand.png")));
-
-
-
-
+            addTile(0, "grass00");
+            addTile(1,"grass00");
+            addTile(2,"grass00");
+            addTile(3,"grass00");
+            addTile(4,"grass00");
+            addTile(5,"grass00");
+            addTile(6, "grass00");
+            addTile(7, "grass00");
+            addTile(8, "grass00");
+            addTile(9, "grass00");
+            addTile(10, "grass00");
+            addTile(11, "grass01");
+            addTile(12, "water00", true);
+            addTile(13, "water01", true);
+            addTile(14, "water02", true);
+            addTile(15, "water03", true);
+            addTile(16, "water04", true);
+            addTile(17, "water05", true);
+            addTile(18, "water06", true);
+            addTile(19, "water07", true);
+            addTile(20, "water08", true);
+            addTile(21, "water09", true);
+            addTile(22, "water10", true);
+            addTile(23, "water11", true);
+            addTile(24, "water12", true);
+            addTile(25, "water13", true);
+            addTile(26, "road00");
+            addTile(27, "road01");
+            addTile(28, "road02");
+            addTile(29, "road03");
+            addTile(30, "road04");
+            addTile(31, "road05");
+            addTile(32, "road06");
+            addTile(33, "road07");
+            addTile(34, "road08");
+            addTile(35, "road09");
+            addTile(36, "road10");
+            addTile(37, "road11");
+            addTile(38, "road12");
+            addTile(39, "earth");
+            addTile(40, "wall", true);
+            addTile(41, "tree", true);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void addTile(int index, String imageName, boolean collision) {
+        UtilityTool uTool = new UtilityTool() ;
+        try {
+            tile[index] = new Tile() ;
+            tile[index].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/" + imageName + ".png")));
+            tile[index].image = uTool.scaledImage(tile[index].image, gp.tileSize, gp.tileSize) ;
+            tile[index].collision = collision ;
+        } catch (IOException e) {
+            e.printStackTrace();;
+        }
+
+    }
+
+    public void addTile(int index, String imageName) {
+        UtilityTool uTool = new UtilityTool() ;
+        try {
+            tile[index] = new Tile() ;
+            tile[index].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/" + imageName + ".png")));
+            tile[index].image = uTool.scaledImage(tile[index].image, gp.tileSize, gp.tileSize) ;
+            tile[index].collision = false ;
+        } catch (IOException e) {
+            e.printStackTrace();;
+        }
+
     }
 
     public void loadMap(String pathToFile) {
@@ -99,7 +147,7 @@ public class TileManager {
                     worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
                     worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
                     worldY - gp.tileSize < gp.player.worldY + gp.player.screenY ) {
-                    g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+                    g2.drawImage(tile[tileNum].image, screenX, screenY,null);
                 }
                 worldCol++;
             }

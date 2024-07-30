@@ -20,7 +20,7 @@ public class Main {
         window.setVisible(true);
 
         // Loading Assets
-        gamePanel.loadObjects();
+        gamePanel.pregameSetup();
 
         // Starting the Game
         gamePanel.startGameThread();

@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Vector;
 
 public class Player extends Entity {
     GamePanel gp;
@@ -23,6 +22,9 @@ public class Player extends Entity {
     int spriteIndex = 0 ; // To cycle through sprites for animation
     int playerWidth ;
     int playerHeight ;
+    public boolean justInteracted = false;
+    public int keyCount = 0 ;
+
 
     ArrayList<ObjectParent> inventory ;
 
@@ -117,9 +119,6 @@ public class Player extends Entity {
             // Checking Object Collission ;
             int objIndex = gp.collisionDetector.checkObject(this, true) ;
 
-            if (collisionOn) {
-                System.out.println("Door Collided");
-            }
             objectAction(objIndex);
 
             if (!collisionOn) {
@@ -157,17 +156,20 @@ public class Player extends Entity {
     }
 
     public void objectAction(int index) {
-        if (index != 999) {
+        if (index != 999 && !justInteracted) {
             switch (gp.obj[index].name) {
                 case "Key":
+                    gp.playSFX(1);
+                    keyCount++ ;
                     inventory.add(gp.obj[index]) ;
-                    System.out.println("Key Obtained");
                     gp.obj[index] = null ;
+                    justInteracted = true;
+                    gp.UserInterface.showMessage("You got a key! Added to Inventory");
                     break ;
                 case "Door":
                     boolean hasKey = false ;
                     int keyIndex = 0;
-                    int keyCount = 0 ;
+                    keyCount = 0 ;
                     int i = 0 ;
                     while (i < inventory.size()) {
                         ObjectParent obj = inventory.get(i) ;
@@ -179,17 +181,40 @@ public class Player extends Entity {
                         i++ ;
                     }
                     if (hasKey) {
+                        gp.playSFX(3);
                         inventory.remove(keyIndex) ;
-                        System.out.println("Used Key!, Keys Left: " + --keyCount);
+                        String message = "Used Key! Keys Left: " + --keyCount ;
+                        gp.UserInterface.showMessage(message);
                         gp.obj[index] = null ;
+                        justInteracted = true;
+                        if (keyCount == 0) {
+                            hasKey = false ;
+                        }
                         collisionOn = false;
                     } else {
-                        System.out.println("Denied Entry! You Don't Have Any Keys Left");
+                        gp.UserInterface.showMessage("Denied Entry! You Don't Have Any Keys Left");
                         collisionOn = true ;
                     }
                     break ;
+                case "Boots":
+                    gp.playSFX(2);
+                    inventory.add(gp.obj[index]) ;
+                    gp.UserInterface.showMessage("Boot Obtained, Speed increased to " + speed);
+                    this.speed++ ;
+                    gp.obj[index] = null ;
+                    justInteracted = true;
+                    break ;
+                case "Chest":
+                    gp.UserInterface.gameOver = true ;
+                    gp.stopMusic();
+                    gp.playSFX(2);
+                    break ;
             }
         }
+    }
+
+    public void resetInteractionFlag() {
+        justInteracted = false;
     }
 
     public void draw(Graphics2D g2) {

@@ -21,9 +21,9 @@ public class GamePanel extends JPanel implements Runnable
     // WORLD SETTINGS:
     public final int maxWorldCol = 50 ;
     public final int maxWorldRow = 50 ;
-    public final int worldWidth = tileSize * maxWorldCol ;
-    public final int worldHeight = tileSize * maxWorldRow ;
 
+
+    //---------------------------------UTILITIES--------------------------------------------
 
     // KEY HANDLER:
     KeyHandler keyH = new KeyHandler();
@@ -34,11 +34,17 @@ public class GamePanel extends JPanel implements Runnable
     // COLLISION DETECTOR:
     public CollisionDetector collisionDetector = new CollisionDetector(this);
 
+    // SOUND MANAGER:
+    public SoundManager soundManager = new SoundManager() ;
+
     // GAME CLOCK:
     Thread gameThread ;
 
     // FRAMES PER SECOND:
     final int FPS = 60 ;
+
+    // UI:
+    public UI UserInterface = new UI(this) ;
 
     //------------------------------ASSETS------------------------------------------------
 
@@ -51,7 +57,6 @@ public class GamePanel extends JPanel implements Runnable
     // OBJECTS:
     public ObjectParent obj[] = new ObjectParent[10] ;
 
-
     // CONSTRUCTOR:
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -63,13 +68,21 @@ public class GamePanel extends JPanel implements Runnable
 
     }
 
-    public void loadObjects() {
+    public void pregameSetup() {
+
         assetLoader.setObject();
+        playMusic(0);
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);      // Passing Game Panel to thread to instantiate
         gameThread.start();
+    }
+
+    public void stopGameThread(boolean status) {
+        if (status) {
+            gameThread = null;
+        }
     }
 
 
@@ -85,7 +98,6 @@ public class GamePanel extends JPanel implements Runnable
         while (gameThread != null) {
             update();
             repaint(); // Calls paintComponent()
-
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
                 if (remainingTime < 0) {
@@ -93,6 +105,7 @@ public class GamePanel extends JPanel implements Runnable
                 }
                 Thread.sleep((long) (remainingTime / 1000000)); // Convert nanoseconds to milliseconds
                 nextDrawTime += drawInterval;
+                stopGameThread(UserInterface.gameOver);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -103,6 +116,7 @@ public class GamePanel extends JPanel implements Runnable
 
     public void update() {
         player.update();
+        player.resetInteractionFlag();
     }
 
     // BUILT IN METHOD OF JPanel TO PAINT GRAPHICS
@@ -123,8 +137,24 @@ public class GamePanel extends JPanel implements Runnable
         // PLAYER
         player.draw(g2);
 
-
+        // UI
+        UserInterface.draw(g2) ;
 
         g2.dispose();   // Saving Memory
+    }
+
+    public void playMusic(int i) {
+        soundManager.setFile(i);
+        soundManager.play() ;
+        soundManager.loop() ;
+    }
+
+    public void stopMusic() {
+        soundManager.stop();
+    }
+
+    public void playSFX(int i) {
+        soundManager.setFile(i);
+        soundManager.play();
     }
 }
