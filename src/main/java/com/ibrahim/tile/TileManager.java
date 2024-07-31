@@ -24,7 +24,7 @@ public class TileManager {
         tile = new Tile[50] ; // Types of Tiles (Textures)
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
         getTileImage();
-        loadMap("/maps/worldv4.txt");
+        loadMap("/maps/maze.txt");
     }
 
     public void getTileImage() {

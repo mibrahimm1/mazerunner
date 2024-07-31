@@ -19,14 +19,14 @@ public class GamePanel extends JPanel implements Runnable
     public final int screenHeight = tileSize * maxScreenRow ; // 384 px
 
     // WORLD SETTINGS:
-    public final int maxWorldCol = 70 ;
-    public final int maxWorldRow = 70 ;
+    public final int maxWorldCol = 41 ;
+    public final int maxWorldRow = 41 ;
 
 
     //---------------------------------UTILITIES--------------------------------------------
 
     // KEY HANDLER:
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(this);
 
     // TILE MANAGER:
     public TileManager tileM = new TileManager(this);
@@ -39,6 +39,11 @@ public class GamePanel extends JPanel implements Runnable
 
     // GAME CLOCK:
     Thread gameThread ;
+
+    // GAME STATE:
+    public int gameState ;
+    public final int playState = 1 ;
+    public final int pauseState = 2 ;
 
     // FRAMES PER SECOND:
     final int FPS = 60 ;
@@ -72,11 +77,19 @@ public class GamePanel extends JPanel implements Runnable
 
         assetLoader.setObject();
         playMusic(0);
+        gameState = playState ;
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);      // Passing Game Panel to thread to instantiate
         gameThread.start();
+    }
+
+    public void restart() {
+        assetLoader.reloadAllObjects();
+        player.worldX = tileSize * 40 ;
+        player.worldY = tileSize * 21 ;
+        gameState = playState ;
     }
 
     public void stopGameThread(boolean status) {
@@ -115,8 +128,13 @@ public class GamePanel extends JPanel implements Runnable
     }
 
     public void update() {
-        player.update();
-        player.resetInteractionFlag();
+        if (gameState == playState) {
+            player.update();
+            player.resetInteractionFlag();
+        } else {
+
+        }
+
     }
 
     // BUILT IN METHOD OF JPanel TO PAINT GRAPHICS

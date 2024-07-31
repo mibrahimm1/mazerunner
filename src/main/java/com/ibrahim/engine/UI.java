@@ -11,6 +11,7 @@ import java.util.Objects;
 
 public class UI {
     GamePanel gp ;
+    Graphics2D g2 ;
     GraphicsEnvironment ge ;
     Font gameFont ;
     BufferedImage KeyIcon ;
@@ -43,50 +44,69 @@ public class UI {
     }
 
     public void draw(Graphics2D g2) {
-        if (gameOver) {
-            String text ;
-            int textLength ;
-            int x ;
-            int y ;
-            g2.setFont(gameFont.deriveFont(25f));
-            g2.setColor(Color.WHITE);
-            text = "Treasure Found!" ;
-            textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth() ;
-            x = gp.screenWidth / 2 - textLength/2 ;
-            y = gp.screenHeight / 2 - (gp.tileSize/2);
-            g2.drawString(text, x, y);
-            g2.setFont(gameFont.deriveFont(Font.BOLD, 30f));
-            text = "YOU WON!" ;
-            textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth() ;
-            x = gp.screenWidth / 2 - textLength/2 ;
-            y = gp.screenHeight / 2 + (gp.tileSize/2);
-            g2.drawString(text, x, y);
-            gameOver = true ;
+        this.g2 = g2 ;
+        g2.setFont(gameFont.deriveFont(Font.BOLD, 30f));
+        if (gp.gameState == gp.playState) {
+            if (gameOver) {
+                String text ;
+                int textLength ;
+                int x ;
+                int y ;
+                g2.setFont(gameFont.deriveFont(25f));
+                g2.setColor(Color.WHITE);
+                text = "Treasure Found!" ;
+                textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth() ;
+                x = gp.screenWidth / 2 - textLength/2 ;
+                y = gp.screenHeight / 2 - (gp.tileSize/2);
+                g2.drawString(text, x, y);
+                g2.setFont(gameFont.deriveFont(Font.BOLD, 30f));
+                text = "YOU WON!" ;
+                textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth() ;
+                x = gp.screenWidth / 2 - textLength/2 ;
+                y = gp.screenHeight / 2 + (gp.tileSize/2);
+                g2.drawString(text, x, y);
+                gameOver = true ;
 
-        } else {
-            playTime += (double) 1/60 ;
-            DecimalFormat decimalFormat = new DecimalFormat("0.0") ;
-            g2.setFont(gameFont) ;
-            g2.setColor(Color.WHITE);
-            g2.drawImage(KeyIcon,
-                    gp.tileSize / 2,
-                    gp.tileSize / 2,
-                    gp.tileSize,
-                    gp.tileSize,
-                    null);
-            g2.drawString(" x " + gp.player.keyCount , 74, 60);
-            g2.setFont(gameFont.deriveFont(25f));
-            g2.drawString(decimalFormat.format(playTime), gp.screenWidth - gp.tileSize * 2 , 60) ;
-            if (messageOn) {
-                g2.setFont(gameFont.deriveFont(20f));
-                g2.drawString(message, gp.tileSize / 2, 150);
-                messageDelayCount++ ;
-                if (messageDelayCount > 120) {
-                    messageDelayCount = 0 ;
-                    messageOn = false ;
+            } else {
+                playTime += (double) 1/60 ;
+                DecimalFormat decimalFormat = new DecimalFormat("0.0") ;
+                g2.setFont(gameFont) ;
+                g2.setColor(Color.WHITE);
+                g2.drawImage(KeyIcon,
+                        gp.tileSize / 2,
+                        gp.tileSize / 2,
+                        gp.tileSize,
+                        gp.tileSize,
+                        null);
+                g2.drawString(" x " + gp.player.keyCount , 74, 60);
+                g2.setFont(gameFont.deriveFont(25f));
+                g2.drawString(decimalFormat.format(playTime) + "s", gp.screenWidth - gp.tileSize * 2 , 60) ;
+                if (messageOn) {
+                    g2.setFont(gameFont.deriveFont(20f));
+                    g2.drawString(message, gp.tileSize / 2, 150);
+                    messageDelayCount++ ;
+                    if (messageDelayCount > 120) {
+                        messageDelayCount = 0 ;
+                        messageOn = false ;
+                    }
                 }
             }
+
+        } else if (gp.gameState == gp.pauseState) {
+            drawPauseScreen();
         }
 
     }
+
+    public void drawPauseScreen() {
+        g2.setFont(gameFont.deriveFont(Font.BOLD, 50f));
+        g2.setColor(Color.WHITE);
+        String text = "PAUSED" ;
+        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth() ;
+        int x = (gp.screenWidth / 2) - (length/2);
+        int y = gp.screenHeight / 2 ;
+        g2.drawString(text, x, y);
+
+    }
+
 }

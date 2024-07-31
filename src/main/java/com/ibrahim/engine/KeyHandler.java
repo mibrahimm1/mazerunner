@@ -4,6 +4,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
+    GamePanel gp ;
+    public KeyHandler(GamePanel gp) {
+        this.gp = gp ;
+    }
     public boolean upPressed, downPressed, leftPressed, rightPressed, openObject;
     @Override
     public void keyTyped(KeyEvent e) {
@@ -39,23 +43,37 @@ public class KeyHandler implements KeyListener {
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
 
-        if (code == KeyEvent.VK_W) {
-            upPressed = false ;
+        if (gp.gameState == gp.playState) {
+            if (code == KeyEvent.VK_W) {
+                upPressed = false ;
 
-        }
-        if (code == KeyEvent.VK_S) {
-            downPressed = false ;
+            }
+            if (code == KeyEvent.VK_S) {
+                downPressed = false ;
 
-        }
-        if (code == KeyEvent.VK_A) {
-            leftPressed = false ;
+            }
+            if (code == KeyEvent.VK_A) {
+                leftPressed = false ;
 
-        }
-        if (code == KeyEvent.VK_D) {
-            rightPressed = false ;
-        }
-        if (code == KeyEvent.VK_Q) {
-            openObject = false ;
+            }
+            if (code == KeyEvent.VK_D) {
+                rightPressed = false ;
+            }
+            if (code == KeyEvent.VK_Q) {
+                openObject = false ;
+            }
+            if (code == KeyEvent.VK_P) {
+                gp.gameState = gp.pauseState ;
+
+            }
+        } else if (gp.gameState == gp.pauseState) {
+            if (code == KeyEvent.VK_R) {
+                gp.restart() ;
+            }
+            if (code == KeyEvent.VK_P) {
+                gp.gameState = gp.playState ;
+            }
+
         }
 
     }

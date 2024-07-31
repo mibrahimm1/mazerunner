@@ -2,6 +2,8 @@ package com.ibrahim.engine;
 
 import com.ibrahim.object.*;
 
+import java.util.Arrays;
+
 public class AssetLoader {
     GamePanel gp ;
     public static int noOfObjects ;
@@ -17,6 +19,27 @@ public class AssetLoader {
         Chest chest = new Chest() ;
         Boots boots = new Boots() ;
 
+        addObject(new Chest(), 0, 15);
+
+        addObject(new Door(), 2,27);
+        addObject(new Door(), 8, 19);
+        addObject(new Door(), 18, 21);
+        addObject(new Door(), 16,  21);
+        addObject(new Door(), 29, 12);
+        addObject(new Door(), 38, 27);
+        addObject(new Key(), 33, 35);
+        addObject(new Key(), 39, 1);
+
+        addObject(new Key(), 5,33);
+        addObject(new Key(), 9,5);
+        addObject(new Key(), 27,25);
+
+        addObject(new Pit(), 15, 37);
+        addObject(new Pit(), 23, 13);
+
+        addObject(new Boots(), 21, 7);
+
+        /*
         addObject(new Key(), 6, 32);
         addObject(new Key(), 6, 63);
         addObject(new Key(), 27, 62);
@@ -48,6 +71,8 @@ public class AssetLoader {
         addObject(new Boots(),5,48);
 
         addObject(new Pit(), 55,20);
+
+         */
     }
 
     public void addObject(ObjectParent object, int x, int y) {
@@ -55,5 +80,13 @@ public class AssetLoader {
         gp.obj[noOfObjects].worldX = x * gp.tileSize ;
         gp.obj[noOfObjects].worldY = y * gp.tileSize ;
         noOfObjects++ ;
+    }
+
+    public void reloadAllObjects() {
+        Arrays.fill(gp.obj, null);
+        gp.player.inventory.clear();
+        gp.player.keyCount = 0 ;
+        noOfObjects = 0 ;
+        setObject();
     }
 }

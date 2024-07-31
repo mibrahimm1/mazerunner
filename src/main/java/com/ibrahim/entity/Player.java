@@ -26,7 +26,7 @@ public class Player extends Entity {
     public int keyCount = 0 ;
 
 
-    ArrayList<ObjectParent> inventory ;
+    public ArrayList<ObjectParent> inventory ;
 
 
 
@@ -53,8 +53,8 @@ public class Player extends Entity {
     }
 
     public void setDefaultValue() {
-        worldX = gp.tileSize * 61 ;
-        worldY = gp.tileSize * 62 ;
+        worldX = gp.tileSize * 40 ;
+        worldY = gp.tileSize * 21 ;
         speed = 4 ;
         lastSpriteChangeTime = System.currentTimeMillis();
     }
@@ -211,8 +211,13 @@ public class Player extends Entity {
                     break ;
                 case "Pit":
                     gp.UserInterface.showMessage("You thought it was that easy! Try Again");
-                    worldX = gp.tileSize * 61 ;
-                    worldY = gp.tileSize * 62 ;
+                    if (gp.obj[index].worldX == 15) {
+                        worldX = gp.tileSize;
+                        worldY = gp.tileSize;
+                    } else {
+                        worldX = gp.tileSize * 39 ;
+                        worldY = gp.tileSize * 39 ;
+                    }
                     break ;
 
             }

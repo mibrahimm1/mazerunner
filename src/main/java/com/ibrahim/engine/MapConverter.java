@@ -193,8 +193,8 @@ public class MapConverter {
     public static void main(String[] args) {
         String inputTextFile = "/maps/world02.txt";
         String outputCSVFile = "world02.csv";
-        String inputCSVFile = "Worldv4.csv";
-        String outputTextFile = "worldv4.txt";
+        String inputCSVFile = "maze.csv";
+        String outputTextFile = "maze.txt";
         String outputTMXFile = "world02.tmx";
 
         try {
