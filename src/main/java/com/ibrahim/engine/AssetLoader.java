@@ -1,12 +1,15 @@
 package com.ibrahim.engine;
 
+import com.ibrahim.entity.Entity;
+import com.ibrahim.entity.NPC_OldMan;
 import com.ibrahim.object.*;
 
 import java.util.Arrays;
 
 public class AssetLoader {
     GamePanel gp ;
-    public static int noOfObjects ;
+    public static int noOfObjects = 0 ;
+    public static int noOfNPC = 0 ;
 
     public AssetLoader(GamePanel gp) {
         this.gp = gp ;
@@ -14,11 +17,6 @@ public class AssetLoader {
 
 
     public void setObject() {
-        Key key = new Key() ;
-        Door door = new Door() ;
-        Chest chest = new Chest() ;
-        Boots boots = new Boots() ;
-
         addObject(new Chest(), 0, 15);
 
         addObject(new Door(), 2,27);
@@ -38,41 +36,17 @@ public class AssetLoader {
         addObject(new Pit(), 23, 13);
 
         addObject(new Boots(), 21, 7);
+    }
 
-        /*
-        addObject(new Key(), 6, 32);
-        addObject(new Key(), 6, 63);
-        addObject(new Key(), 27, 62);
-        addObject(new Key(), 36, 58);
-        addObject(new Key(), 40, 26);
-        addObject(new Key(), 44, 6);
-        addObject(new Key(), 59, 54);
-        addObject(new Key(), 64, 48);
-        addObject(new Key(), 18, 55);
+    public void setNPC() {
+        addNPC(new NPC_OldMan(gp), 7, 7);
+    }
 
-
-        addObject(new Door(), 59,56);
-        addObject(new Door(), 59,52);
-        addObject(new Door(), 62,41);
-        addObject(new Door(), 54,41);
-        addObject(new Door(), 57,17);
-        addObject(new Door(), 40,46);
-        addObject(new Door(), 27,60);
-        addObject(new Door(), 20,47);
-        addObject(new Door(), 15,56);
-        addObject(new Door(), 15,54);
-        addObject(new Door(), 10,31);
-        addObject(new Door(), 14,15);
-        addObject(new Door(), 12,10);
-
-
-        addObject(new Chest(), 12,8);
-
-        addObject(new Boots(),5,48);
-
-        addObject(new Pit(), 55,20);
-
-         */
+    public void addNPC(Entity entity, int x, int y) {
+        gp.npc[noOfNPC] = entity ;
+        gp.npc[noOfNPC].worldX = x * gp.tileSize ;
+        gp.npc[noOfNPC].worldY = y * gp.tileSize ;
+        noOfNPC++ ;
     }
 
     public void addObject(ObjectParent object, int x, int y) {

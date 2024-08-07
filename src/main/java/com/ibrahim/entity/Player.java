@@ -12,30 +12,21 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player extends Entity {
-    GamePanel gp;
     KeyHandler keyH ;
-
     public final int screenX ;
     public final int screenY ;
-    BufferedImage spriteSheet;
-    BufferedImage[][] playerSprites; // Array to store player sprites
     int spriteIndex = 0 ; // To cycle through sprites for animation
     int playerWidth ;
     int playerHeight ;
     public boolean justInteracted = false;
     public int keyCount = 0 ;
-
-
     public ArrayList<ObjectParent> inventory ;
-
-
-
     long lastSpriteChangeTime;
-    final long spriteChangeInterval = 100;
+    final long baseSpriteChangeInterval = 100;
 
 
     public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp ;
+        super(gp) ;
         this.keyH = keyH ;
         this.playerWidth = gp.originalTileSize * 3;
         this.playerHeight = gp.originalTileSize * 4;
@@ -44,7 +35,8 @@ public class Player extends Entity {
         screenY = gp.screenHeight / 2 - (gp.tileSize/2);
         inventory = new ArrayList<>();
 
-        collisionArea = new Rectangle(20, 33, 18, 22);
+        // collisionArea = new Rectangle(20, 33, 18, 22);
+        collisionArea = new Rectangle(20, 28, 18, 22);
         collisionAreaDefaultX = collisionArea.x ;
         collisionAreaDefaultY = collisionArea.y ;
         loadSpriteSheet();
@@ -53,9 +45,11 @@ public class Player extends Entity {
     }
 
     public void setDefaultValue() {
-        worldX = gp.tileSize * 40 ;
-        worldY = gp.tileSize * 21 ;
-        speed = 4 ;
+        // worldX = gp.tileSize * 40 ;
+        // worldY = gp.tileSize * 21 ;
+        worldX = gp.tileSize * 9 ;
+        worldY = gp.tileSize * 7 ;
+        speed = 3 ;
         lastSpriteChangeTime = System.currentTimeMillis();
     }
 
@@ -112,16 +106,19 @@ public class Player extends Entity {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             moved = true;
             collisionOn = false; // Reset collision flag before checking collision
+            playerCollision = false ;
 
             // Check Tile Collision
             gp.collisionDetector.checkTile(this);
 
-            // Checking Object Collission ;
-            int objIndex = gp.collisionDetector.checkObject(this, true) ;
-
+            // Checking Object Collision
+            int objIndex = gp.collisionDetector.checkObject(this, true);
             objectAction(objIndex);
 
-            if (!collisionOn) {
+            // Checking NPC Collision
+            int npcIndex = gp.collisionDetector.checkEntityCollisions(this, gp.npc);
+
+            if (!collisionOn && !playerCollision) {
                 // Move the player if no collision detected
                 switch (direction) {
                     case 0: // Up
@@ -138,6 +135,35 @@ public class Player extends Entity {
                         break;
                 }
             }
+            else if (playerCollision) {
+                // Check Tile Collision
+                gp.collisionDetector.checkTile(this);
+
+                if (!collisionOn) {
+                    switch (direction) {
+                        case 0: // Up
+                            if (gp.npc[npcIndex].direction != 2) {
+                                worldY -= speed;
+                            }
+                            break;
+                        case 2: // Down
+                            if (gp.npc[npcIndex].direction != 0) {
+                                worldY += speed;
+                            }
+                            break;
+                        case 1: // Left
+                            if (gp.npc[npcIndex].direction != 3) {
+                                worldX -= speed;
+                            }
+                            break;
+                        case 3: // Right
+                            if (gp.npc[npcIndex].direction != 1) {
+                                worldX += speed;
+                            }
+                            break;
+                    }
+                }
+            }
         } else {
             // No movement keys pressed, reset sprite index to 0
             spriteIndex = 0;
@@ -146,7 +172,9 @@ public class Player extends Entity {
         // Update sprite index if player moved
         if (moved) {
             long currentTime = System.currentTimeMillis();
-            if (currentTime - lastSpriteChangeTime >= spriteChangeInterval) {
+            // Adjust sprite change interval based on speed
+            long adjustedSpriteChangeInterval = baseSpriteChangeInterval / speed;
+            if (currentTime - lastSpriteChangeTime >= adjustedSpriteChangeInterval) {
                 spriteIndex = (spriteIndex + 1) % playerSprites[direction].length;
                 lastSpriteChangeTime = currentTime;
             }
@@ -154,6 +182,8 @@ public class Player extends Entity {
             spriteIndex = 0; // Reset to the first sprite if not moving
         }
     }
+
+
 
     public void objectAction(int index) {
         if (index != 999 && !justInteracted) {
@@ -222,6 +252,10 @@ public class Player extends Entity {
 
             }
         }
+    }
+
+    public void interactNPC(int i) {
+        // TODO: Interaction of NPC
     }
 
     public void resetInteractionFlag() {

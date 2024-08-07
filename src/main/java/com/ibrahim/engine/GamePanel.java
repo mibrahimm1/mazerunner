@@ -3,6 +3,7 @@ package com.ibrahim.engine;
 import javax.swing.*;
 import java.awt.*;
 
+import com.ibrahim.entity.Entity;
 import com.ibrahim.entity.Player;
 import com.ibrahim.object.ObjectParent;
 import com.ibrahim.tile.TileManager;
@@ -62,6 +63,9 @@ public class GamePanel extends JPanel implements Runnable
     // OBJECTS:
     public ObjectParent obj[] = new ObjectParent[50] ;
 
+    // NPCs:
+    public Entity npc[] = new Entity[10] ;
+
     // CONSTRUCTOR:
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -74,8 +78,8 @@ public class GamePanel extends JPanel implements Runnable
     }
 
     public void pregameSetup() {
-
         assetLoader.setObject();
+        assetLoader.setNPC();
         playMusic(0);
         gameState = playState ;
     }
@@ -129,6 +133,11 @@ public class GamePanel extends JPanel implements Runnable
 
     public void update() {
         if (gameState == playState) {
+            for (int i = 0 ; i < npc.length ; i++) {
+                if (npc[i] != null) {
+                    npc[i].update() ;
+                }
+            }
             player.update();
             player.resetInteractionFlag();
         } else {
@@ -149,6 +158,13 @@ public class GamePanel extends JPanel implements Runnable
         for (int i = 0 ; i < obj.length; i++) {
             if (obj[i] != null) {
                 obj[i].draw(g2, this);
+            }
+        }
+
+        // NPCs
+        for (int i = 0 ; i < npc.length ; i++) {
+            if(npc[i] != null) {
+                npc[i].draw(g2);
             }
         }
 
