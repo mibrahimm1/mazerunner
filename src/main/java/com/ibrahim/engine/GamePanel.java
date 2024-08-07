@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable
     //---------------------------------UTILITIES--------------------------------------------
 
     // KEY HANDLER:
-    KeyHandler keyH = new KeyHandler(this);
+    public KeyHandler keyH = new KeyHandler(this);
 
     // TILE MANAGER:
     public TileManager tileM = new TileManager(this);
@@ -45,6 +45,10 @@ public class GamePanel extends JPanel implements Runnable
     public int gameState ;
     public final int playState = 1 ;
     public final int pauseState = 2 ;
+
+    public final int dialogueState = 3 ;
+
+    public int stateDelay = 0 ;
 
     // FRAMES PER SECOND:
     final int FPS = 60 ;
@@ -140,8 +144,16 @@ public class GamePanel extends JPanel implements Runnable
             }
             player.update();
             player.resetInteractionFlag();
-        } else {
-
+        } else if (gameState == dialogueState) {
+            stateDelay++ ;
+            if (!keyH.enterPressed) {
+                gameState = playState ;
+            }
+            if (stateDelay > 180) {
+                stateDelay = 0 ;
+                keyH.setDefault();
+                gameState = playState ;
+            }
         }
 
     }

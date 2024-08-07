@@ -20,6 +20,12 @@ public class UI {
     public int messageDelayCount ;
     public String message = "" ;
 
+    public String dialogueText ;
+
+    public void setDialogueText(String dialogueText) {
+        this.dialogueText = dialogueText;
+    }
+
     double playTime = 0 ;
 
     public UI(GamePanel gp) {
@@ -92,8 +98,12 @@ public class UI {
                 }
             }
 
-        } else if (gp.gameState == gp.pauseState) {
+        }
+        if (gp.gameState == gp.pauseState) {
             drawPauseScreen();
+        }
+        if (gp.gameState == gp.dialogueState) {
+            drawDialogueScreen();
         }
 
     }
@@ -109,4 +119,28 @@ public class UI {
 
     }
 
+    public void drawDialogueScreen() {
+        int x = gp.tileSize * 2 ;
+        int y = gp.tileSize / 2 ;
+        int width = gp.screenWidth - (gp.tileSize * 4);
+        int height = gp.tileSize * 2 ;
+
+        drawSubWindow(x,y,width,height);
+        g2.setFont(gameFont.deriveFont(Font.PLAIN, 20f));
+        g2.setColor(Color.BLACK);
+
+        int stringX = x + ( gp.tileSize / 2 ) ;
+        int stringY = y + ( gp.tileSize ) ;
+        g2.drawString(dialogueText, stringX, stringY);
+    }
+
+    public void drawSubWindow(int x, int y, int width, int height) {
+        g2.setColor(Color.WHITE);
+        g2.fillRoundRect(x,y,width,height,10,10);
+    }
+
+    public void drawSubWindow(int x, int y, int width, int height, Color color) {
+        g2.setColor(color);
+        g2.fillRoundRect(x,y,width,height,10,10);
+    }
 }

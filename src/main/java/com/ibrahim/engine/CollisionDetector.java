@@ -303,14 +303,14 @@ public class CollisionDetector {
                 target.worldX + target.collisionArea.x + (gp.originalTileSize - target.collisionArea.width) / 2,
                 target.worldY + target.collisionArea.y + (gp.originalTileSize - target.collisionArea.height) / 2,
                 gp.originalTileSize * 3 * 7 / 10,
-                gp.originalTileSize * 4 * 7 / 10
+                gp.originalTileSize * 4 * 8 / 10
         );
 
         entity.collisionArea = new Rectangle(
                 entity.worldX + entity.collisionArea.x + (gp.originalTileSize - entity.collisionArea.width) / 2,
                 entity.worldY + entity.collisionArea.y + (gp.originalTileSize - entity.collisionArea.height) / 2,
                 gp.originalTileSize * 3 * 7 / 10,
-                gp.originalTileSize * 4 * 7 / 10
+                gp.originalTileSize * 4 * 8 / 10
         );
 
         // Temporarily move the entity's collision area (Predictive Collision Detection)
@@ -339,8 +339,9 @@ public class CollisionDetector {
     }
 
     public int checkEntityCollisions(Entity entity, Entity[] targets) {
-        int i = 0 ;
+        int i = -1 ;
         for (Entity target : targets) {
+            i++ ;
             if (target != null && checkEntityCollision(entity, target)) {
                 entity.playerCollision = true;
                 target.playerCollision = true;

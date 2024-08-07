@@ -5,6 +5,7 @@ import com.ibrahim.engine.KeyHandler;
 import com.ibrahim.object.ObjectParent;
 
 import javax.imageio.ImageIO;
+import javax.swing.plaf.multi.MultiSeparatorUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class Player extends Entity {
     public ArrayList<ObjectParent> inventory ;
     long lastSpriteChangeTime;
     final long baseSpriteChangeInterval = 100;
+    private boolean showDialogue = false ;
 
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -88,6 +90,7 @@ public class Player extends Entity {
 
     public void update() {
         boolean moved = false;
+        int npcIndex ;
 
         if (keyH.upPressed) {
             direction = 0;
@@ -116,7 +119,7 @@ public class Player extends Entity {
             objectAction(objIndex);
 
             // Checking NPC Collision
-            int npcIndex = gp.collisionDetector.checkEntityCollisions(this, gp.npc);
+            npcIndex = gp.collisionDetector.checkEntityCollisions(this, gp.npc);
 
             if (!collisionOn && !playerCollision) {
                 // Move the player if no collision detected
@@ -136,6 +139,21 @@ public class Player extends Entity {
                 }
             }
             else if (playerCollision) {
+                gp.UserInterface.showMessage("Who this might be?");
+
+                /*
+                if (playerCollision) {
+                    if (keyH.enterPressed) {
+                        showDialogue = !showDialogue ;
+                        gp.keyH.enterPressed = false; // Reset enterPressed flag after interaction
+                        if (showDialogue) {
+                            interactNPC(npcIndex);
+                        }
+                    }
+                }
+
+                 */
+
                 // Check Tile Collision
                 gp.collisionDetector.checkTile(this);
 
@@ -161,9 +179,9 @@ public class Player extends Entity {
                                 worldX += speed;
                             }
                             break;
+                        }
                     }
                 }
-            }
         } else {
             // No movement keys pressed, reset sprite index to 0
             spriteIndex = 0;
@@ -255,7 +273,9 @@ public class Player extends Entity {
     }
 
     public void interactNPC(int i) {
-        // TODO: Interaction of NPC
+       // if (i != -1) {
+       //     gp.gameState = gp.dialogueState ;
+       //  }
     }
 
     public void resetInteractionFlag() {

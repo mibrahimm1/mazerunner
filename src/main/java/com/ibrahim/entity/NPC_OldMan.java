@@ -29,6 +29,7 @@ public class NPC_OldMan extends Entity {
         collisionArea = new Rectangle(20, 28, 18, 22);
         collisionAreaDefaultX = collisionArea.x ;
         collisionAreaDefaultY = collisionArea.y ;
+        dialogue = "Wooooooooooooooooooooooo" ;
 
         loadSpriteSheet();
         loadPlayerSprites();
@@ -88,6 +89,10 @@ public class NPC_OldMan extends Entity {
         boolean playerCollision = gp.collisionDetector.checkEntityCollision(this, gp.player);
 
         if (playerCollision) {
+            if (gp.keyH.enterPressed) {
+                gp.UserInterface.setDialogueText("Wooooooooooooooo");
+                gp.gameState = gp.dialogueState ;
+            }
             if (!directionSwitched) {
                 // If collision with player, face the player and stop moving
                 switch (gp.player.direction) {

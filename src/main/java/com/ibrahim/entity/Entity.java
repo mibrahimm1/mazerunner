@@ -17,6 +17,7 @@ public class Entity {
     public boolean collisionOn ;
     final long spriteChangeInterval = 100;
     public int direction; // 0: UP, 2: DOWN, 1: LEFT, 3: RIGHT
+    public String dialogue ;
 
     public boolean playerCollision = false ;
 

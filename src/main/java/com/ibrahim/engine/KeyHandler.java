@@ -8,7 +8,16 @@ public class KeyHandler implements KeyListener {
     public KeyHandler(GamePanel gp) {
         this.gp = gp ;
     }
-    public boolean upPressed, downPressed, leftPressed, rightPressed, openObject;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, openObject, enterPressed;
+
+    public void setDefault() {
+        upPressed = false ;
+        downPressed = false ;
+        leftPressed = false ;
+        rightPressed = false ;
+        openObject = false ;
+        enterPressed = false ;
+    }
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -35,7 +44,13 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_Q) {
             openObject = true ;
         }
-
+        if (code == KeyEvent.VK_ENTER) {
+            if (enterPressed) {
+                enterPressed = false ;
+            } else {
+                enterPressed = true ;
+            }
+        }
 
     }
 
@@ -73,8 +88,6 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_P) {
                 gp.gameState = gp.playState ;
             }
-
         }
-
     }
 }
