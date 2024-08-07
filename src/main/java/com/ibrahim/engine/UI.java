@@ -131,16 +131,16 @@ public class UI {
 
         int stringX = x + ( gp.tileSize / 2 ) ;
         int stringY = y + ( gp.tileSize ) ;
-        g2.drawString(dialogueText, stringX, stringY);
+        g2.drawString("\"" + dialogueText + "\"", stringX, stringY);
     }
 
     public void drawSubWindow(int x, int y, int width, int height) {
         g2.setColor(Color.WHITE);
-        g2.fillRoundRect(x,y,width,height,10,10);
+        g2.fillRoundRect(x,y,width,height,50,50);
     }
 
     public void drawSubWindow(int x, int y, int width, int height, Color color) {
         g2.setColor(color);
-        g2.fillRoundRect(x,y,width,height,10,10);
+        g2.fillRoundRect(x,y,width,height,50,50);
     }
 }

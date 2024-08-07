@@ -147,6 +147,8 @@ public class GamePanel extends JPanel implements Runnable
         } else if (gameState == dialogueState) {
             stateDelay++ ;
             if (!keyH.enterPressed) {
+                stateDelay = 0 ;
+                keyH.setDefault();
                 gameState = playState ;
             }
             if (stateDelay > 180) {
