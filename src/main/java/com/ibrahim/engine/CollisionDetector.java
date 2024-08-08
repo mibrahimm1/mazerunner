@@ -179,120 +179,6 @@ public class CollisionDetector {
         return index;
     }
 
-    /*
-    public int checkEntity(Entity entity, Entity[] targets) {
-        int index = -1; // Use -1 to indicate no collision by default
-
-        for (int i = 0; i < targets.length; i++) {
-            Entity target = targets[i];
-            if (target != null && target.collisionArea != null) {
-                if (target.collisionOn) {
-                    entity.collisionOn = true ;
-                    index = i; // Set index to the NPC in collision
-                    break; // Stop checking after finding a collision
-                }
-            }
-        }
-        return index; // Return the index of the colliding NPC, or -1 if no collision
-    }
-
-     */
-
-
-    public int checkEntity(Entity entity, Entity[] targets) {
-        int index = -1;
-
-        for (int i = 0; i < targets.length; i++) {
-            Entity target = targets[i];
-            if (target != null && target.collisionArea != null) {
-                Rectangle targetOriginalArea = new Rectangle(target.collisionArea);
-                Rectangle playerOriginalArea = new Rectangle(entity.collisionArea);
-
-                target.collisionArea = new Rectangle(
-                        target.worldX + target.collisionArea.x,
-                        target.worldY + target.collisionArea.y,
-                        gp.originalTileSize * 3,
-                        gp.originalTileSize * 4
-                );
-
-                entity.collisionArea = new Rectangle(
-                        entity.worldX + entity.collisionArea.x,
-                        entity.worldY + entity.collisionArea.y,
-                        gp.originalTileSize * 3,
-                        gp.originalTileSize * 4
-                );
-
-                switch (entity.direction) {
-                    case 0: entity.collisionArea.y -= entity.speed; break;
-                    case 2: entity.collisionArea.y += entity.speed; break;
-                    case 1: entity.collisionArea.x -= entity.speed; break;
-                    case 3: entity.collisionArea.x += entity.speed; break;
-                }
-
-                if (target.collisionArea.intersects(entity.collisionArea)) {
-                    entity.collisionOn = true;
-                    entity.playerCollision = true;
-                    index = i; // Return the index of the colliding NPC
-                    break;
-                } else {
-                    entity.playerCollision = false;
-                }
-
-                target.collisionArea = targetOriginalArea;
-                entity.collisionArea = playerOriginalArea;
-            }
-        }
-
-        return index;
-    }
-
-
-    public void checkPlayer(Entity entity) {
-        Rectangle entityOriginalArea = new Rectangle(entity.collisionArea);
-        Rectangle playerOriginalArea = new Rectangle(gp.player.collisionArea);
-
-        entity.collisionArea = new Rectangle(
-                entity.worldX + entity.collisionArea.x,
-                entity.worldY + entity.collisionArea.y,
-                gp.originalTileSize * 3,
-                gp.originalTileSize * 4
-        );
-
-        gp.player.collisionArea = new Rectangle(
-                gp.player.worldX + gp.player.collisionArea.x,
-                gp.player.worldY + gp.player.collisionArea.y,
-                gp.originalTileSize * 3,
-                gp.originalTileSize * 4
-        );
-
-        switch (entity.direction) {
-            case 0: entity.collisionArea.y -= entity.speed; break;
-            case 2: entity.collisionArea.y += entity.speed; break;
-            case 1: entity.collisionArea.x -= entity.speed; break;
-            case 3: entity.collisionArea.x += entity.speed; break;
-        }
-
-        if (entity.collisionArea.intersects(gp.player.collisionArea)) {
-            entity.playerCollision = true;
-
-            if (!entity.directionSwitched) {
-                switch (gp.player.direction) {
-                    case 0: entity.direction = 2; break;
-                    case 2: entity.direction = 0; break;
-                    case 1: entity.direction = 3; break;
-                    case 3: entity.direction = 1; break;
-                }
-                entity.directionSwitched = true;
-            }
-        } else {
-            entity.playerCollision = false;
-            entity.directionSwitched = false;
-        }
-
-        entity.collisionArea = entityOriginalArea;
-        gp.player.collisionArea = playerOriginalArea;
-    }
-
     public boolean checkEntityCollision(Entity entity, Entity target) {
         // Storing original positions and sizes
         Rectangle targetOriginalArea = new Rectangle(target.collisionArea);
@@ -303,14 +189,14 @@ public class CollisionDetector {
                 target.worldX + target.collisionArea.x + (gp.originalTileSize - target.collisionArea.width) / 2,
                 target.worldY + target.collisionArea.y + (gp.originalTileSize - target.collisionArea.height) / 2,
                 gp.originalTileSize * 3 * 7 / 10,
-                gp.originalTileSize * 4 * 8 / 10
+                gp.originalTileSize * 4 * 9 / 10
         );
 
         entity.collisionArea = new Rectangle(
                 entity.worldX + entity.collisionArea.x + (gp.originalTileSize - entity.collisionArea.width) / 2,
                 entity.worldY + entity.collisionArea.y + (gp.originalTileSize - entity.collisionArea.height) / 2,
                 gp.originalTileSize * 3 * 7 / 10,
-                gp.originalTileSize * 4 * 8 / 10
+                gp.originalTileSize * 4 * 9 / 10
         );
 
         // Temporarily move the entity's collision area (Predictive Collision Detection)

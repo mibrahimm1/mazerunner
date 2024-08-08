@@ -10,7 +10,7 @@ public class Entity {
 
     public int worldX, worldY ;
     BufferedImage spriteSheet;
-    BufferedImage[][] playerSprites; // Array to store player sprites
+    public BufferedImage[][] playerSprites; // Array to store player sprites
     public int speed ;
     public Rectangle collisionArea ;
     public int collisionAreaDefaultX, collisionAreaDefaultY ;

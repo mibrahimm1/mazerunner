@@ -10,6 +10,7 @@ public class KeyHandler implements KeyListener {
     }
     public boolean upPressed, downPressed, leftPressed, rightPressed, openObject, enterPressed;
 
+    public boolean scrollUp, scrollDown ;
     public void setDefault() {
         upPressed = false ;
         downPressed = false ;
@@ -26,24 +27,6 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();      // Returning ASCII Code
 
-        if (code == KeyEvent.VK_W) {
-            upPressed = true ;
-
-        }
-        if (code == KeyEvent.VK_S) {
-            downPressed = true ;
-
-        }
-        if (code == KeyEvent.VK_A) {
-            leftPressed = true ;
-
-        }
-        if (code == KeyEvent.VK_D) {
-            rightPressed = true ;
-        }
-        if (code == KeyEvent.VK_Q) {
-            openObject = true ;
-        }
         if (code == KeyEvent.VK_ENTER) {
             if (enterPressed) {
                 enterPressed = false ;
@@ -52,13 +35,64 @@ public class KeyHandler implements KeyListener {
             }
         }
 
+        if (gp.gameState == gp.titleState) {
+            if (code == KeyEvent.VK_UP) {
+                if (gp.UserInterface.commandNum > 0) {
+                    gp.UserInterface.commandNum-- ;
+                }
+            }
+            if (code == KeyEvent.VK_DOWN) {
+                if (gp.UserInterface.commandNum < 2) {
+                    gp.UserInterface.commandNum++ ;
+                }
+            }
+            if (code == KeyEvent.VK_ENTER) {
+                switch (gp.UserInterface.commandNum) {
+                    case 0:
+                        gp.gameState = gp.playState;
+                        gp.playMusic(0);
+                        setDefault();
+                        break;
+                    case 1:
+                    case 2:
+                        System.exit(0);
+                        break;
+                }
+            }
+        } else if (gp.gameState == gp.playState) {
+            if (code == KeyEvent.VK_W) {
+                upPressed = true ;
+
+            }
+            if (code == KeyEvent.VK_S) {
+                downPressed = true ;
+
+            }
+            if (code == KeyEvent.VK_A) {
+                leftPressed = true ;
+
+            }
+            if (code == KeyEvent.VK_D) {
+                rightPressed = true ;
+            }
+            if (code == KeyEvent.VK_Q) {
+                openObject = true ;
+            }
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
 
-        if (gp.gameState == gp.playState) {
+        if (gp.gameState == gp.titleState) {
+            if (code == KeyEvent.VK_UP) {
+                scrollUp = false ;
+            }
+            if (code == KeyEvent.VK_DOWN) {
+                scrollDown = false ;
+            }
+        } else if (gp.gameState == gp.playState) {
             if (code == KeyEvent.VK_W) {
                 upPressed = false ;
 
@@ -81,6 +115,7 @@ public class KeyHandler implements KeyListener {
                 gp.gameState = gp.pauseState ;
 
             }
+
         } else if (gp.gameState == gp.pauseState) {
             if (code == KeyEvent.VK_R) {
                 gp.restart() ;

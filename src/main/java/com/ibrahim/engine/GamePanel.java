@@ -45,9 +45,8 @@ public class GamePanel extends JPanel implements Runnable
     public int gameState ;
     public final int playState = 1 ;
     public final int pauseState = 2 ;
-
     public final int dialogueState = 3 ;
-
+    public final int titleState = 4 ;
     public int stateDelay = 0 ;
 
     // FRAMES PER SECOND:
@@ -84,8 +83,7 @@ public class GamePanel extends JPanel implements Runnable
     public void pregameSetup() {
         assetLoader.setObject();
         assetLoader.setNPC();
-        playMusic(0);
-        gameState = playState ;
+        gameState = titleState ;
     }
 
     public void startGameThread() {
@@ -165,30 +163,36 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g ; // Converting Graphics to Graphics2D
-        // TILES
-        tileM.draw(g2);
 
-        // OBJECTS
-        for (int i = 0 ; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].draw(g2, this);
+        if (gameState == titleState) {
+            UserInterface.draw(g2);
+        } else {
+
+            // TILES
+            tileM.draw(g2);
+
+            // OBJECTS
+            for (int i = 0 ; i < obj.length; i++) {
+                if (obj[i] != null) {
+                    obj[i].draw(g2, this);
+                }
             }
-        }
 
-        // NPCs
-        for (int i = 0 ; i < npc.length ; i++) {
-            if(npc[i] != null) {
-                npc[i].draw(g2);
+            // NPCs
+            for (int i = 0 ; i < npc.length ; i++) {
+                if(npc[i] != null) {
+                    npc[i].draw(g2);
+                }
             }
+
+            // PLAYER
+            player.draw(g2);
+
+            // UI
+            UserInterface.draw(g2) ;
+
+            g2.dispose();   // Saving Memory
         }
-
-        // PLAYER
-        player.draw(g2);
-
-        // UI
-        UserInterface.draw(g2) ;
-
-        g2.dispose();   // Saving Memory
     }
 
     public void playMusic(int i) {

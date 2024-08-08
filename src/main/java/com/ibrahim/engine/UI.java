@@ -19,14 +19,14 @@ public class UI {
     public boolean gameOver = false ;
     public int messageDelayCount ;
     public String message = "" ;
-
     public String dialogueText ;
+    double playTime = 0 ;
+    public int commandNum = 0 ;
+
 
     public void setDialogueText(String dialogueText) {
         this.dialogueText = dialogueText;
     }
-
-    double playTime = 0 ;
 
     public UI(GamePanel gp) {
         this.gp = gp ;
@@ -52,6 +52,13 @@ public class UI {
     public void draw(Graphics2D g2) {
         this.g2 = g2 ;
         g2.setFont(gameFont.deriveFont(Font.BOLD, 30f));
+
+        // TITLE STATE
+        if (gp.gameState == gp.titleState) {
+            drawTitleScreen() ;
+        }
+
+        // PLAY STATE
         if (gp.gameState == gp.playState) {
             if (gameOver) {
                 String text ;
@@ -99,9 +106,13 @@ public class UI {
             }
 
         }
+
+        // PAUSE STATE
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen();
         }
+
+        // DIALOGUE STATE
         if (gp.gameState == gp.dialogueState) {
             drawDialogueScreen();
         }
@@ -134,13 +145,82 @@ public class UI {
         g2.drawString("\"" + dialogueText + "\"", stringX, stringY);
     }
 
-    public void drawSubWindow(int x, int y, int width, int height) {
+    public void drawTitleScreen() {
+        g2.setFont(gameFont.deriveFont(Font.BOLD, 60f));
         g2.setColor(Color.WHITE);
-        g2.fillRoundRect(x,y,width,height,50,50);
+
+        // TITLE TEXT
+        String text = "MazeRunner" ;
+        int x = getXforCenteredText(text);
+        int y = gp.tileSize * 3;
+
+        g2.setColor(Color.GRAY);
+        g2.drawString(text,x + 4,y + 4);
+
+        g2.setColor(Color.WHITE);
+        g2.drawString(text,x,y);
+
+        // BLUE BOY
+        x = gp.screenWidth / 2 - gp.tileSize;
+        y += gp.tileSize ;
+        g2.drawImage(gp.player.playerSprites[2][0], x, y, gp.player.playerWidth * 2, gp.player.playerHeight * 2, null );
+
+        // MENU
+        g2.setFont(gameFont.deriveFont(Font.PLAIN, 30f));
+
+        text = "NEW GAME" ;
+        x = getXforCenteredText(text) ;
+        y += gp.tileSize * 4 ;
+        g2.drawString(text,x,y);
+        if (commandNum == 0) {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
+        text = "LOAD GAME" ;
+        x = getXforCenteredText(text) ;
+        y += gp.tileSize ;
+        g2.drawString(text,x,y);
+        if (commandNum == 1) {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
+        text = "QUIT" ;
+        x = getXforCenteredText(text) ;
+        y += gp.tileSize ;
+        g2.drawString(text,x,y);
+        if (commandNum == 2) {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
+
+
     }
 
-    public void drawSubWindow(int x, int y, int width, int height, Color color) {
-        g2.setColor(color);
-        g2.fillRoundRect(x,y,width,height,50,50);
+    public void drawSubWindow(int x, int y, int width, int height) {
+        // Set the color for the fill
+        g2.setColor(Color.WHITE);
+        g2.fillRoundRect(x, y, width, height, 25, 25);
+
+        // Set the color for the stroke
+        g2.setColor(Color.BLACK); // You can choose any color for the stroke
+        g2.setStroke(new BasicStroke(3)); // You can adjust the stroke width
+        g2.drawRoundRect(x, y, width, height, 25, 25);
+    }
+
+    public void drawSubWindow(int x, int y, int width, int height, Color backgroundColor, Color strokeColor) {
+        // Set the color for the fill
+        g2.setColor(backgroundColor);
+        g2.fillRoundRect(x, y, width, height, 25, 25);
+
+        // Set the color for the stroke
+        g2.setColor(strokeColor); // You can choose any color for the stroke
+        g2.setStroke(new BasicStroke(3)); // You can adjust the stroke width
+        g2.drawRoundRect(x, y, width, height, 25, 25);
+    }
+
+    public int getXforCenteredText(String text) {
+        int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        int x = (gp.screenWidth / 2) - (length / 2);
+        return x;
     }
 }

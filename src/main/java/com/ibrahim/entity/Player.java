@@ -17,8 +17,8 @@ public class Player extends Entity {
     public final int screenX ;
     public final int screenY ;
     int spriteIndex = 0 ; // To cycle through sprites for animation
-    int playerWidth ;
-    int playerHeight ;
+    public int playerWidth ;
+    public int playerHeight ;
     public boolean justInteracted = false;
     public int keyCount = 0 ;
     public ArrayList<ObjectParent> inventory ;
